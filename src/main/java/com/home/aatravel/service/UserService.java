@@ -33,26 +33,6 @@ public class UserService {
         return this.userRepository.findByName(name).orElse(null);
     }
 
-    public UserResponse signup(UserSignupRequest userSignupRequest) {
 
-        // 1. check if user has been created....
-        if (userRepository.existsUserByEmail(userSignupRequest.getEmail().toString())) {
-            throw new AccountExistsException(userSignupRequest.getEmail().toString());
-        }
-
-        // 2. encode password
-        userSignupRequest.setPassword(passwordEncoder.encode(userSignupRequest.getPassword()));
-
-        return Optional.of(userRepository.save(new User(userSignupRequest)))
-                .map( user -> {
-                    UserResponse response = new UserResponse();
-                    response.setId(user.getId());
-                    response.setUsername(user.getUsername());
-                    response.setEmail(user.getEmail());
-                    return response;
-                })
-                .get();
-
-    }
 
 }

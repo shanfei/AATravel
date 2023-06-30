@@ -25,11 +25,8 @@ public class UserController {
         return paymentService.calculateByUserAndProject(uid, pid);
     }
 
-    @PostMapping("/signup")
-    public UserResponse signup(@RequestBody UserSignupRequest userSignupRequest) {
 
-        return userService.signup(userSignupRequest);
 
-    }
+
 
 }

@@ -4,6 +4,7 @@ import com.home.aatravel.AaTravelApplication;
 import com.home.aatravel.entity.User;
 import com.home.aatravel.model.Email;
 import com.home.aatravel.model.UserResponse;
+import com.home.aatravel.model.UserSigninRequest;
 import com.home.aatravel.model.UserSignupRequest;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -26,10 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class UserServiceTest {
 
     @Resource
-    private PasswordEncoder passwordEncoder;
-
-    @Resource
-    private UserService userService;
+    private AuthService authService;
 
     @Test
     public void testSignup() {
@@ -40,10 +38,31 @@ public class UserServiceTest {
         userSignupRequest.setEmail(new Email("fei.shan", "gmail.com"));
         userSignupRequest.setPassword(password);
 
-        UserResponse createdUser = userService.signup(userSignupRequest);
+        UserResponse createdUser = authService.signup(userSignupRequest);
 
         assertNotNull(createdUser);
         assertEquals("fei.shan@gmail.com", createdUser.getEmail());
+    }
+
+
+    @Test
+    public void testSignin() {
+
+        String password = RandomStringUtils.randomAlphabetic(10);
+
+        UserSignupRequest userSignupRequest = new UserSignupRequest();
+        userSignupRequest.setEmail(new Email("fei.shan", "gmail.com"));
+        userSignupRequest.setPassword(password);
+
+        UserResponse createdUser = authService.signup(userSignupRequest);
+
+        assertNotNull(createdUser);
+
+        UserSigninRequest userSigninRequest = new UserSigninRequest();
+        userSigninRequest.setUsername("fei.shan@gmail.com");
+        userSigninRequest.setPassword(password);
+        UserResponse signinUser = authService.signin(userSigninRequest);
+        assertNotNull(signinUser);
     }
 
 }
