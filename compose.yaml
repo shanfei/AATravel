@@ -2,9 +2,25 @@ services:
   mysql:
     image: 'mysql:latest'
     environment:
-      - 'MYSQL_DATABASE=mydatabase'
-      - 'MYSQL_PASSWORD=secret'
-      - 'MYSQL_ROOT_PASSWORD=verysecret'
-      - 'MYSQL_USER=myuser'
+      - 'MYSQL_DATABASE=aatravel'
+      - 'MYSQL_PASSWORD=aatravel'
+      - 'MYSQL_ROOT_PASSWORD=password'
+      - 'MYSQL_USER=aatravel'
     ports:
       - '3306'
+
+  aatravel-api:
+    container_name: aatravel-api
+    depends_on: mysql
+    build:
+      context: AATravel
+      dockerfile: Dockerfile
+    image: aatravel-api:0.0.1
+    ports:
+      - 80:80
+    networks:
+      - spring-cloud-network
+
+networks:
+  spring-cloud-network:
+    driver: bridge
