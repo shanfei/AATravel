@@ -1,0 +1,96 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.1.1'
+    id 'io.spring.dependency-management' version '1.1.0'
+    id 'org.hibernate.orm' version '6.2.5.Final'
+    id 'org.graalvm.buildtools.native' version '0.9.23'
+}
+
+group = 'com.home'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '17'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    integrationTest {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/bdd/java')
+        }
+        resources.srcDir file('src/bdd/resources')
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-mysql'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine'
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'junit', module: 'junit'
+    }
+    // https://mvnrepository.com/artifact/mysql/mysql-connector-java
+    implementation 'mysql:mysql-connector-java:8.0.33'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation "org.testcontainers:mysql"
+
+    integrationTestImplementation 'mysql:mysql-connector-java:8.0.33'
+    integrationTestImplementation 'org.springframework.boot:spring-boot-starter-web'
+    integrationTestImplementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    integrationTestImplementation 'io.cucumber:cucumber-java:7.12.1'
+    integrationTestImplementation 'io.cucumber:cucumber-junit-platform-engine:7.12.1'
+    // https://mvnrepository.com/artifact/io.cucumber/cucumber-spring
+    integrationTestImplementation 'io.cucumber:cucumber-spring:7.12.1'
+    integrationTestImplementation 'org.projectlombok:lombok'
+    integrationTestImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'junit', module: 'junit'
+    }
+    integrationTestImplementation 'org.testcontainers:junit-jupiter'
+    integrationTestImplementation "org.testcontainers:mysql"
+    integrationTestImplementation 'org.junit.jupiter:junit-jupiter-engine'
+    integrationTestImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'junit', module: 'junit'
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    // https://mvnrepository.com/artifact/org.junit.platform/junit-platform-suite-api
+    integrationTestImplementation 'org.junit.platform:junit-platform-suite-api'
+
+
+
+}
+
+
+tasks.test {
+    useJUnitPlatform()
+    systemProperty("cucumber.junit-platform.naming-strategy", "long")
+}
+
+
+hibernate {
+    enhancement {
+        lazyInitialization true
+        dirtyTracking true
+        associationManagement true
+    }
+}
+
