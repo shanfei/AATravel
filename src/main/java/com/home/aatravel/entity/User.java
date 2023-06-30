@@ -1,5 +1,6 @@
 package com.home.aatravel.entity;
 
+import com.home.aatravel.model.UserSignupRequest;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -21,12 +22,25 @@ public class User {
         this.name = name;
     }
 
+    public User(UserSignupRequest userSignupRequest) {
+        this.email = userSignupRequest.getEmail().toString();
+        this.password = userSignupRequest.getPassword();
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column
     private String name;
+
+    @Column(unique = true)
+    private String username;
+
+    @Column(unique = true)
+    private String email;
+
+    private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     List<TransactionParticipation> transactionParticipationList;

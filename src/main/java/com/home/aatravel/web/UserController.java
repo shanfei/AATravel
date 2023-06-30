@@ -2,6 +2,8 @@ package com.home.aatravel.web;
 
 import com.home.aatravel.entity.User;
 import com.home.aatravel.model.TransactionMemberDetail;
+import com.home.aatravel.model.UserResponse;
+import com.home.aatravel.model.UserSignupRequest;
 import com.home.aatravel.service.UserService;
 import com.home.aatravel.service.PaymentService;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +15,7 @@ public class UserController {
 
     private PaymentService paymentService;
 
-    private UserService memberService;
+    private UserService userService;
 
     @GetMapping("/{uid}/projects/{pid}/detail")
     public List<TransactionMemberDetail> getTransactionMemberDetails(
@@ -23,8 +25,11 @@ public class UserController {
         return paymentService.calculateByUserAndProject(uid, pid);
     }
 
-    @PostMapping
-    public User create(@RequestBody User user) {
-        return memberService.save(user);
+    @PostMapping("/signup")
+    public UserResponse signup(@RequestBody UserSignupRequest userSignupRequest) {
+
+        return userService.signup(userSignupRequest);
+
     }
+
 }
